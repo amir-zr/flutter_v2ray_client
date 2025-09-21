@@ -125,6 +125,17 @@ public class V2rayController {
         return delay[0];
     }
 
+    public static long getConnectedV2rayServerDelayDirect(final String url) {
+        if (V2rayController.getConnectionState() != AppConfigs.V2RAY_STATES.V2RAY_CONNECTED) {
+            return -1;
+        }
+        try {
+            return V2rayCoreManager.getInstance().getConnectedV2rayServerDelay(url);
+        } catch (Exception e) {
+            return -1;
+        }
+    }
+
     public static long getV2rayServerDelay(final String config, final String url) {
         return V2rayCoreManager.getInstance().getV2rayServerDelay(config, url);
     }

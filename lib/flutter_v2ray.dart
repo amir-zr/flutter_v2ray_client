@@ -93,12 +93,12 @@ class V2ray {
 
   /// Measures the delay to a V2Ray server using the provided configuration.
   /// [config] is the V2Ray configuration in JSON format.
-  /// [url] is the server URL to test for delay (default is 'https://google.com/generate_204').
+  /// [url] is the server URL to test for delay (default is 'https://clients3.google.com/generate_204').
   /// Throws an [ArgumentError] if the config is not valid JSON.
   /// Returns a [Future] that completes with the delay in milliseconds.
   Future<int> getServerDelay({
     required String config,
-    String url = 'https://google.com/generate_204',
+    String url = 'https://clients3.google.com/generate_204',
   }) async {
     try {
       if (jsonDecode(config) == null) {
@@ -112,10 +112,10 @@ class V2ray {
   }
 
   /// Measures the delay to the currently connected V2Ray server.
-  /// [url] is the server URL to test for delay (default is 'https://google.com/generate_204').
+  /// [url] is the server URL to test for delay (default is 'https://clients3.google.com/generate_204').
   /// Returns a [Future] that completes with the delay in milliseconds.
   Future<int> getConnectedServerDelay({
-    String url = 'https://google.com/generate_204',
+    String url = 'https://clients3.google.com/generate_204',
   }) async {
     return FlutterV2rayPlatform.instance.getConnectedServerDelay(url);
   }
