@@ -224,6 +224,7 @@ abstract class V2RayURL {
                   ['Host'][0]
               : sni;
         }
+        
       } else {
         streamSetting['tcpSettings']['header']['type'] = 'none';
         sni = host != '' ? host ?? '' : '';

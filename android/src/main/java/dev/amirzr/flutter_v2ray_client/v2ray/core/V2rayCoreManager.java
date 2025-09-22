@@ -357,6 +357,16 @@ public final class V2rayCoreManager {
         }
     }
 
+    public Long getConnectedV2rayServerDelay(final String url) {
+        try {
+            if (coreController == null)
+                return -1L;
+            return coreController.measureDelay(url);
+        } catch (Exception e) {
+            return -1L;
+        }
+    }
+
     public Long getV2rayServerDelay(final String config, final String url) {
         try {
             try {

@@ -36,7 +36,9 @@ public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginR
 
     private static final int REQUEST_CODE_VPN_PERMISSION = 24;
     private static final int REQUEST_CODE_POST_NOTIFICATIONS = 1;
-    private final ExecutorService executor = Executors.newSingleThreadExecutor();
+    private final ExecutorService executor = Executors.newFixedThreadPool(
+            Math.max(2, Math.min(4, Runtime.getRuntime().availableProcessors()))
+    );
     private MethodChannel vpnControlMethod;
     private EventChannel vpnStatusEvent;
     private EventChannel.EventSink vpnStatusSink;
@@ -129,9 +131,8 @@ public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginR
                 case "getConnectedServerDelay":
                     executor.submit(() -> {
                         try {
-                            AppConfigs.DELAY_URL = call.argument("url");
-                            result.success(
-                                    V2rayController.getConnectedV2rayServerDelay(binding.getApplicationContext()));
+                            String url = call.argument("url");
+                            result.success(V2rayController.getConnectedV2rayServerDelayDirect(url));
                         } catch (Exception e) {
                             result.success(-1);
                         }
