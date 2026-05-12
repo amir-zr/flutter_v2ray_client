@@ -5,6 +5,38 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0]
+
+This release updates the embedded **Xray core to v26.4.17** and refreshes the Android `libv2ray` AAR and `V2rayCoreManager` integration. The items below follow upstream Xray changes since the **v25.10.15** line.
+
+### Core — architecture
+- **TUN inbound (Android VPN mode)**: Native integration with `VpnService`, with full-device VPN via a TUN interface, reducing the need for tun2socks in many deployments.
+- **Process-based routing**: Route traffic by application or process where Android allows it, for finer control in VPN scenarios.
+
+### Core — protocols & networking
+- **Hysteria2**: High-throughput, UDP-based transport with better performance on unstable mobile links.
+- **UDPhop**: Dynamic UDP port hopping to keep sessions working when ports are filtered or throttled.
+- **Salamander obfuscation layer**: Optional traffic obfuscation to reduce visibility to mobile DPI.
+
+### Core — obfuscation (FinalMask)
+- Custom HTTP/TCP headers, TCP fragmentation, and UDP noise; randomized traffic patterns to resist fingerprinting and DPI.
+
+### Core — security
+- Replaces the old insecure TLS option with **certificate pinning** via `pinnedPeerCertSha256`.
+- **REALITY**: Tighter handling of invalid or intercepted certificates, with stronger MITM protection on untrusted and mobile networks.
+
+### Core — DNS & routing
+- **XDNS**: More stable mobile DNS; routing behavior aligned with TUN mode; fewer surprises when the device switches between WiFi and mobile data.
+
+### Core — performance & stability (mobile)
+- Lower memory use (improved geodata handling); fewer Android runtime crash paths; more stable performance on poor networks; more reliable long-lived background sessions.
+
+### Android — TUN
+- Stabler TUN path through the VPN `Service` stack; less packet loss on high-latency links; better behavior under background execution limits; fewer stalls and race conditions in typical mobile conditions.
+
+### Changed
+- **Android**: Updated `libv2ray` (AAR) and `V2rayCoreManager` to use the new core and APIs above.
+
 ## [3.1.0]
 
 ### Changed

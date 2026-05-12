@@ -205,7 +205,7 @@ public final class V2rayCoreManager {
                 Libv2ray.setProtectorServer(server, false);
             } catch (Exception ignored) {
             }
-            coreController.startLoop(v2rayConfig.V2RAY_FULL_JSON_CONFIG);
+            coreController.startLoop(v2rayConfig.V2RAY_FULL_JSON_CONFIG, 0);
             V2RAY_STATE = AppConfigs.V2RAY_STATES.V2RAY_CONNECTED;
             if (isV2rayCoreRunning()) {
                 // Always try to show notification, but handle failures gracefully

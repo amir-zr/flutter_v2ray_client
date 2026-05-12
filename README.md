@@ -16,6 +16,13 @@
 >
 > [<img src="https://img.shields.io/badge/📸_Screenshots-6e5494?style=for-the-badge" height="40">](#-screenshots) [<img src="https://img.shields.io/badge/📱_Platforms-6e5494?style=for-the-badge" height="40">](#-supported-platforms)
 
+> [!IMPORTANT]
+> ### ✨ 3.2.0 — Xray v26.4.17 — 26 May 2026
+>
+> **3.2.0** updates the embedded core to **Xray v26.4.17**: native **TUN** VPN on Android (less reliance on tun2socks), new options such as **Hysteria2**, **UDPhop**, and obfuscation (Salamander, **FinalMask**), **TLS certificate pinning** (`pinnedPeerCertSha256`) instead of the old insecure mode, and stronger **REALITY** plus **XDNS** for mobile. Expect lower memory use, fewer crashes, and more stable TUN/background behavior on Android.
+>
+> [Full 3.2.0 release notes in **CHANGELOG** →](CHANGELOG.md#320)
+
 ## ✨ Premium Features
 
 > **🔒 2-Year Guarantee**  
@@ -87,7 +94,7 @@
 ## 📱 Supported Platforms
 | Platform  | Status    | Info | Type |
 | --------- | --------- | ---- | ---- |
-| Android   | Done ✅   | Xray 25.12.2 | Free |
+| Android   | Done ✅   | Xray 26.4.17 | Free |
 | iOS       | Done ✅ | Xray 25.12.2 <br/> HevSocks5Tunnel 5.14.1 | [Buy Now](https://t.me/AmirZrDevv) |
 | Windows   | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
 | Linux     | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
