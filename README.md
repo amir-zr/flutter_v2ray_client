@@ -92,14 +92,13 @@
 <br>
 
 ## 📱 Supported Platforms
-| Platform  | Status    | Info | Type |
-| --------- | --------- | ---- | ---- |
-| Android   | Done ✅   | Xray 26.4.17 | Free |
-| iOS       | Done ✅ | Xray 25.12.2 <br/> HevSocks5Tunnel 5.14.1 | [Buy Now](https://t.me/AmirZrDevv) |
-| Windows   | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
-| Linux     | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
-| macOS     | Done ✅ | Xray 25.10.15 <br/> Sing Box 1.12.10 | [Buy Now](https://t.me/AmirZrDevv) |
-| Browser Extension | Coming Soon | Chrome, Firefox, Edge | Premium |
+| Platform  | Status    | Info | Updated | Type |
+| --------- | --------- | ---- | ------- | ---- |
+| Android   | Done ✅   | Xray 26.6.1 | 2026-06-17 | Free |
+| iOS       | Done ✅ | Xray 26.6.1 <br/> HevSocks5Tunnel 5.14.1 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
+| Windows   | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
+| Linux     | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
+| macOS     | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
 
 <br>
 
