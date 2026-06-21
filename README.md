@@ -115,7 +115,7 @@ Or you can manually add flutter_v2ray_client into the dependencies section in yo
 
 ```yaml
 dependencies:
-  flutter_v2ray_client: ^3.0.0
+  flutter_v2ray_client: ^3.4.0
 ```
 
 <br>
