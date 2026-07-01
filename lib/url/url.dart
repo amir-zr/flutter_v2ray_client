@@ -14,8 +14,8 @@ abstract class V2RayURL {
   /// The original URL string provided during construction.
   final String url;
 
-  /// Whether to allow insecure connections (default: true).
-  bool get allowInsecure => true;
+  /// Whether to allow insecure connections (default: false).
+  bool get allowInsecure => false;
 
   /// The security method for the connection (default: 'auto').
   String get security => 'auto';
@@ -38,7 +38,7 @@ abstract class V2RayURL {
   /// Inbound configuration for the proxy.
   Map<String, dynamic> inbound = {
     'tag': 'in_proxy',
-    'port': 1080,
+    'port': 10807,
     'protocol': 'socks',
     'listen': '127.0.0.1',
     'settings': {
@@ -160,6 +160,7 @@ abstract class V2RayURL {
     'quicSettings': null,
     'realitySettings': null,
     'grpcSettings': null,
+    'xhttpSettings': null,
     'dsSettings': null,
     'sockopt': null
   };
@@ -186,6 +187,7 @@ abstract class V2RayURL {
     required String? key,
     required String? mode,
     required String? serviceName,
+    String? extra,
   }) {
     var sni = '';
     streamSetting['network'] = transport;
@@ -270,6 +272,24 @@ abstract class V2RayURL {
       streamSetting['grpcSettings'] = {
         'serviceName': serviceName ?? '',
         'multiMode': mode == 'multi',
+      };
+      sni = host ?? '';
+    } else if (transport == 'xhttp' || transport == 'splithttp') {
+      // Xray uses the "xhttp" network name (splithttp is the legacy alias).
+      streamSetting['network'] = 'xhttp';
+      dynamic extraObject;
+      if (extra != null && extra.isNotEmpty) {
+        try {
+          extraObject = jsonDecode(extra);
+        } catch (_) {
+          extraObject = null;
+        }
+      }
+      streamSetting['xhttpSettings'] = {
+        'path': (path == null || path.isEmpty) ? '/' : path,
+        'host': host ?? '',
+        'mode': (mode == null || mode.isEmpty) ? 'auto' : mode,
+        'extra': extraObject,
       };
       sni = host ?? '';
     }

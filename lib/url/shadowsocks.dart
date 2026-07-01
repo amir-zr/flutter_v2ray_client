@@ -43,6 +43,7 @@ class ShadowSocksURL extends V2RayURL {
         key: uri.queryParameters['key'],
         mode: uri.queryParameters['mode'],
         serviceName: uri.queryParameters['serviceName'],
+        extra: uri.queryParameters['extra'],
       );
       super.populateTlsSettings(
         streamSecurity: uri.queryParameters['security'] ?? '',

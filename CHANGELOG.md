@@ -5,6 +5,20 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.4.0]
+
+### Added
+- **Hysteria**: URL parser and support for Hysteria protocol in V2Ray
+
+### Fixed
+- **XHTTP**: Fixed `allowInsecure` handling on xhttp parser
+
+## [3.3.0]
+
+### Changed
+- **Core**: Updated embedded Xray core to **v26.6.1** (from v26.4.17)
+- **Android**: Updated `libv2ray` (AAR) and `V2rayCoreManager` to match the new core
+
 ## [3.2.0]
 
 This release updates the embedded **Xray core to v26.4.17** and refreshes the Android `libv2ray` AAR and `V2rayCoreManager` integration. The items below follow upstream Xray changes since the **v25.10.15** line.

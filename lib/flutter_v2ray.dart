@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter_v2ray_client/url/hysteria.dart';
 import 'package:flutter_v2ray_client/url/shadowsocks.dart';
 import 'package:flutter_v2ray_client/url/socks.dart';
 import 'package:flutter_v2ray_client/url/trojan.dart';
@@ -164,6 +165,11 @@ class V2ray {
         return ShadowSocksURL(url: url);
       case 'socks':
         return SocksURL(url: url);
+      case 'hysteria':
+      case 'hysteria2':
+      case 'hy':
+      case 'hy2':
+        return HysteriaURL(url: url);
       default:
         throw ArgumentError('url is invalid');
     }
