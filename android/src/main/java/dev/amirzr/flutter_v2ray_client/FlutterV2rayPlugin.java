@@ -1,20 +1,17 @@
 package dev.amirzr.flutter_v2ray_client;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
-import android.content.pm.PackageManager;
 import android.net.VpnService;
 import android.os.Build;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.core.app.ActivityCompat;
 
 import dev.amirzr.flutter_v2ray_client.v2ray.V2rayController;
 import dev.amirzr.flutter_v2ray_client.v2ray.V2rayReceiver;
@@ -38,7 +35,6 @@ import io.flutter.plugin.common.PluginRegistry;
 public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginRegistry.ActivityResultListener {
 
     private static final int REQUEST_CODE_VPN_PERMISSION = 24;
-    private static final int REQUEST_CODE_POST_NOTIFICATIONS = 1;
     private final ExecutorService executor = Executors.newCachedThreadPool();
 
     private MethodChannel vpnControlMethod;
@@ -165,14 +161,6 @@ public class FlutterV2rayPlugin implements FlutterPlugin, ActivityAware, PluginR
                         return;
                     }
 
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                        if (ActivityCompat.checkSelfPermission(activity,
-                                Manifest.permission.POST_NOTIFICATIONS) != PackageManager.PERMISSION_GRANTED) {
-                            ActivityCompat.requestPermissions(activity,
-                                    new String[] { Manifest.permission.POST_NOTIFICATIONS },
-                                    REQUEST_CODE_POST_NOTIFICATIONS);
-                        }
-                    }
                     final Intent request = VpnService.prepare(activity);
                     if (request != null) {
                         pendingResult = result;

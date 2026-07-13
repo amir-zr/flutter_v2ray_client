@@ -25,7 +25,7 @@ public class V2rayProxyOnlyService extends Service implements V2rayServicesListe
         // Handle null intent case - can happen when service is restarted by system
         if (intent == null) {
             Log.w("V2rayProxyOnlyService", "onStartCommand called with null intent, stopping service");
-            this.onDestroy();
+            stopSelf(startId);
             return START_NOT_STICKY;
         }
 
@@ -35,7 +35,7 @@ public class V2rayProxyOnlyService extends Service implements V2rayServicesListe
         // Handle null command case
         if (startCommand == null) {
             Log.w("V2rayProxyOnlyService", "No command found in intent, stopping service");
-            this.onDestroy();
+            stopSelf(startId);
             return START_NOT_STICKY;
         }
 
@@ -43,17 +43,24 @@ public class V2rayProxyOnlyService extends Service implements V2rayServicesListe
             V2rayConfig v2rayConfig = (V2rayConfig) intent.getSerializableExtra("V2RAY_CONFIG");
             if (v2rayConfig == null) {
                 Log.w("V2rayProxyOnlyService", "V2RAY_CONFIG is null, cannot start service");
-                this.onDestroy();
+                stopSelf(startId);
                 return START_NOT_STICKY;
             }
             if (V2rayCoreManager.getInstance().isV2rayCoreRunning()) {
                 V2rayCoreManager.getInstance().stopCore();
             }
+            if (!V2rayCoreManager.getInstance().showNotification(v2rayConfig)) {
+                Log.e("V2rayProxyOnlyService", "Failed to promote proxy service to foreground");
+                V2rayCoreManager.getInstance().stopCore();
+                stopSelf(startId);
+                return START_NOT_STICKY;
+            }
             if (V2rayCoreManager.getInstance().startCore(v2rayConfig)) {
                 Log.i("V2rayProxyOnlyService", "onStartCommand success => v2ray core started.");
             } else {
                 Log.e("V2rayProxyOnlyService", "Failed to start v2ray core");
-                this.onDestroy();
+                V2rayCoreManager.getInstance().stopCore();
+                stopSelf(startId);
                 return START_NOT_STICKY;
             }
         } else if (startCommand.equals(AppConfigs.V2RAY_SERVICE_COMMANDS.STOP_SERVICE)) {
@@ -73,7 +80,7 @@ public class V2rayProxyOnlyService extends Service implements V2rayServicesListe
             }, "MEASURE_CONNECTED_V2RAY_SERVER_DELAY").start();
         } else {
             Log.w("V2rayProxyOnlyService", "Unknown command received, stopping service");
-            this.onDestroy();
+            stopSelf(startId);
             return START_NOT_STICKY;
         }
         return START_STICKY;

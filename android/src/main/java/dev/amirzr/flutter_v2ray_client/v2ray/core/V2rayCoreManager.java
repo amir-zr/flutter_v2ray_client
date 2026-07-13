@@ -2,7 +2,6 @@ package dev.amirzr.flutter_v2ray_client.v2ray.core;
 
 import static dev.amirzr.flutter_v2ray_client.v2ray.utils.Utilities.getUserAssetsPath;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
@@ -11,7 +10,6 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.CountDownTimer;
@@ -19,7 +17,6 @@ import android.util.Log;
 import android.util.Pair;
 
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import dev.amirzr.flutter_v2ray_client.v2ray.interfaces.V2rayServicesListener;
@@ -208,8 +205,9 @@ public final class V2rayCoreManager {
             coreController.startLoop(v2rayConfig.V2RAY_FULL_JSON_CONFIG, 0);
             V2RAY_STATE = AppConfigs.V2RAY_STATES.V2RAY_CONNECTED;
             if (isV2rayCoreRunning()) {
-                // Always try to show notification, but handle failures gracefully
-                // VPN will continue working even if notification fails
+                // Refresh the already-started foreground notification with the
+                // connected state. Foreground promotion itself is done by the
+                // service before starting the core.
                 showNotification(v2rayConfig);
             }
         } catch (Exception e) {
@@ -315,14 +313,12 @@ public final class V2rayCoreManager {
         return "";
     }
 
-    private void showNotification(final V2rayConfig v2rayConfig) {
+    public boolean showNotification(final V2rayConfig v2rayConfig) {
         Service context = v2rayServicesListener.getService();
         if (context == null) {
             Log.w("V2rayCoreManager", "Cannot show notification - service context is null");
-            return;
+            return false;
         }
-
-        boolean isVpnService = (context instanceof V2rayVPNService);
 
         // Build notification regardless of permission status
         // VPN services MUST call startForeground() on Android 8.0+
@@ -341,8 +337,11 @@ public final class V2rayCoreManager {
                 flags = PendingIntent.FLAG_UPDATE_CURRENT;
             }
 
-            PendingIntent notificationContentPendingIntent = PendingIntent.getActivity(
-                    context, 0, launchIntent, flags);
+            PendingIntent notificationContentPendingIntent = null;
+            if (launchIntent != null) {
+                notificationContentPendingIntent = PendingIntent.getActivity(
+                        context, 0, launchIntent, flags);
+            }
 
             String notificationChannelID = createNotificationChannelID(v2rayConfig.APPLICATION_NAME);
 
@@ -352,7 +351,7 @@ public final class V2rayCoreManager {
             } else if (AppConfigs.V2RAY_CONNECTION_MODE == AppConfigs.V2RAY_CONNECTION_MODES.VPN_TUN) {
                 stopIntent = new Intent(context, V2rayVPNService.class);
             } else {
-                return;
+                return false;
             }
             stopIntent.putExtra("COMMAND", AppConfigs.V2RAY_SERVICE_COMMANDS.STOP_SERVICE);
 
@@ -368,45 +367,41 @@ public final class V2rayCoreManager {
                     .setPriority(NotificationCompat.PRIORITY_LOW) // Low priority
                     .setShowWhen(false)
                     .setOnlyAlertOnce(true)
-                    .setContentIntent(notificationContentPendingIntent)
                     .setSilent(true)
                     .setOngoing(true)
                     .setSound(null) // No sound
                     .setVibrate(null); // No vibration
 
+            if (notificationContentPendingIntent != null) {
+                notificationBuilder.setContentIntent(notificationContentPendingIntent);
+            }
+
             // Only add action button if we have the text for it
             if (v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME != null &&
                     !v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME.isEmpty()) {
                 notificationBuilder.addAction(0, v2rayConfig.NOTIFICATION_DISCONNECT_BUTTON_NAME,
-                        notificationContentPendingIntent);
+                        pendingIntent);
             }
 
             // CRITICAL: VPN services MUST call startForeground
-            // Catch all possible exceptions to prevent crashes
             try {
                 context.startForeground(NOTIFICATION_ID, notificationBuilder.build());
                 Log.i("V2rayCoreManager", "Foreground service started successfully");
+                return true;
             } catch (SecurityException se) {
-                // Android 14+ SecurityException when POST_NOTIFICATIONS denied
-                Log.w("V2rayCoreManager", "SecurityException - notification permission denied", se);
-                if (isVpnService) {
-                    // Still crashes even with SecurityException - this is Android limitation
-                    // Best we can do is log it
-                    Log.e("V2rayCoreManager", "VPN service may crash due to notification permission denial");
-                }
+                Log.e("V2rayCoreManager", "SecurityException starting foreground service", se);
             } catch (IllegalStateException ise) {
-                // Can happen if app is in background
-                // Also catches ForegroundServiceStartNotAllowedException on Android 12+ (which extends IllegalStateException)
-                Log.w("V2rayCoreManager", "IllegalStateException starting foreground", ise);
+                Log.e("V2rayCoreManager", "IllegalStateException starting foreground service", ise);
             } catch (RuntimeException re) {
-                // Catch any other runtime exceptions
-                Log.w("V2rayCoreManager", "RuntimeException starting foreground", re);
+                Log.e("V2rayCoreManager", "RuntimeException starting foreground service", re);
             } catch (Exception e) {
-                Log.w("V2rayCoreManager", "Unexpected exception starting foreground", e);
+                Log.e("V2rayCoreManager", "Unexpected exception starting foreground service", e);
             }
+            return false;
 
         } catch (Exception e) {
             Log.e("V2rayCoreManager", "Error building notification", e);
+            return false;
         }
     }
 
