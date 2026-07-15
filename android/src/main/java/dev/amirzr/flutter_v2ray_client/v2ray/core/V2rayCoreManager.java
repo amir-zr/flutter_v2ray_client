@@ -313,6 +313,64 @@ public final class V2rayCoreManager {
         return "";
     }
 
+    public boolean showStartupNotification(final String fallbackRemark) {
+        Service context = v2rayServicesListener.getService();
+        if (context == null) {
+            Log.w("V2rayCoreManager", "Cannot show startup notification - service context is null");
+            return false;
+        }
+
+        try {
+            String appName = AppConfigs.APPLICATION_NAME;
+            if (appName == null || appName.isEmpty()) {
+                CharSequence label = context.getApplicationInfo().loadLabel(context.getPackageManager());
+                if (label != null) {
+                    appName = label.toString();
+                }
+            }
+            if (appName == null || appName.isEmpty()) {
+                appName = "VPN";
+            }
+
+            String title = fallbackRemark;
+            if (title == null || title.isEmpty()) {
+                title = appName;
+            }
+
+            int icon = AppConfigs.APPLICATION_ICON;
+            if (icon == 0) {
+                icon = android.R.drawable.stat_sys_warning;
+            }
+
+            String notificationChannelID = createNotificationChannelID(appName);
+            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(context,
+                    notificationChannelID)
+                    .setSmallIcon(icon)
+                    .setContentTitle(title)
+                    .setContentText("")
+                    .setPriority(NotificationCompat.PRIORITY_LOW)
+                    .setShowWhen(false)
+                    .setOnlyAlertOnce(true)
+                    .setSilent(true)
+                    .setOngoing(true)
+                    .setSound(null)
+                    .setVibrate(null);
+
+            context.startForeground(NOTIFICATION_ID, notificationBuilder.build());
+            Log.i("V2rayCoreManager", "Startup foreground service notification shown");
+            return true;
+        } catch (SecurityException se) {
+            Log.e("V2rayCoreManager", "SecurityException starting startup foreground service", se);
+        } catch (IllegalStateException ise) {
+            Log.e("V2rayCoreManager", "IllegalStateException starting startup foreground service", ise);
+        } catch (RuntimeException re) {
+            Log.e("V2rayCoreManager", "RuntimeException starting startup foreground service", re);
+        } catch (Exception e) {
+            Log.e("V2rayCoreManager", "Unexpected exception starting startup foreground service", e);
+        }
+        return false;
+    }
+
     public boolean showNotification(final V2rayConfig v2rayConfig) {
         Service context = v2rayServicesListener.getService();
         if (context == null) {
