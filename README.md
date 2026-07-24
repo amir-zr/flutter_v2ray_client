@@ -11,6 +11,14 @@
 [![likes](https://img.shields.io/pub/likes/flutter_v2ray_client)](https://pub.dev/packages/flutter_v2ray_client/score)
 [![pub points](https://img.shields.io/pub/points/flutter_v2ray_client)](https://pub.dev/packages/flutter_v2ray_client/score)
 
+## 🆕 New: flutter_singbox_client
+
+Looking for **Sing-box** instead of Xray/V2Ray? Check out our new sibling plugin:
+
+> **[flutter_singbox_client](https://github.com/amir-zr/flutter_singbox_client)** — Flutter plugin for Sing-box VPN & Proxy — SOCKS, HTTP, Shadowsocks, ShadowsocksR, VMess, VLESS, Trojan, Hysteria, Hysteria2, TUIC, WireGuard, SSH, AnyTLS, Naive, and Reality. **Android · iOS · Windows · macOS · Linux**.
+>
+> [GitHub](https://github.com/amir-zr/flutter_singbox_client) · [pub.dev](https://pub.dev/packages/flutter_singbox_client)
+
 > [!TIP]
 > ### 🚀 Available on All Platforms - Now Including iOS! (App Store Safe)
 >
@@ -39,6 +47,7 @@
 
 ## Table of contents
 - [flutter\_v2ray\_client](#flutter_v2ray_client)
+  - [🆕 New: flutter\_singbox\_client](#-new-flutter_singbox_client)
   - [✨ Premium Features](#-premium-features)
   - [Table of contents](#table-of-contents)
   - [⚡ Features](#-features)
@@ -75,30 +84,30 @@
 
 ## 📸 Screenshots
 
-| **iOS** |
-|---------|
-| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-ios.png" alt="iOS" width="600"/> |
-| **Android** |
+| **iOS**                                                                                                                                                                                                                                                                                                                |
+| ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-ios.png" alt="iOS" width="600"/>                                                                                                                                                                                   |
+| **Android**                                                                                                                                                                                                                                                                                                            |
 | <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-1.png" alt="Android Main Screen" width="300"/>&nbsp;&nbsp;&nbsp;<img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-2.png" alt="Android Logs Screen" width="300"/> |
-| **Windows** |
-| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-windows.png" alt="Windows" width="600"/> |
-| **macOS** |
-| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-macos.png" alt="macOS" width="600"/> |
-| **Linux** |
-| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-linux.png" alt="Linux" width="600"/> |
+| **Windows**                                                                                                                                                                                                                                                                                                            |
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-windows.png" alt="Windows" width="600"/>                                                                                                                                                                           |
+| **macOS**                                                                                                                                                                                                                                                                                                              |
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-macos.png" alt="macOS" width="600"/>                                                                                                                                                                               |
+| **Linux**                                                                                                                                                                                                                                                                                                              |
+| <img src="https://github.com/amir-zr/flutter_v2ray_client/raw/main/screenshots/flutter-v2ray-client-linux.png" alt="Linux" width="600"/>                                                                                                                                                                               |
 
 *Example app demonstrating flutter_v2ray_client features across all platforms*
 
 <br>
 
 ## 📱 Supported Platforms
-| Platform  | Status    | Info | Updated | Type |
-| --------- | --------- | ---- | ------- | ---- |
-| Android   | Done ✅   | Xray 26.6.1 | 2026-06-17 | Free |
-| iOS       | Done ✅ | Xray 26.6.1 <br/> HevSocks5Tunnel 5.14.1 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
-| Windows   | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
-| Linux     | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
-| macOS     | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
+| Platform | Status | Info                                     | Updated    | Type                               |
+| -------- | ------ | ---------------------------------------- | ---------- | ---------------------------------- |
+| Android  | Done ✅ | Xray 26.6.1                              | 2026-06-17 | Free                               |
+| iOS      | Done ✅ | Xray 26.6.1 <br/> HevSocks5Tunnel 5.14.1 | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
+| Windows  | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12       | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
+| Linux    | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12       | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
+| macOS    | Done ✅ | Xray 26.6.1 <br/> Sing Box 1.13.12       | 2026-06-17 | [Buy Now](https://t.me/AmirZrDevv) |
 
 <br>
 
@@ -115,7 +124,7 @@ Or you can manually add flutter_v2ray_client into the dependencies section in yo
 
 ```yaml
 dependencies:
-  flutter_v2ray_client: ^3.4.0
+  flutter_v2ray_client: ^3.0.0
 ```
 
 <br>
