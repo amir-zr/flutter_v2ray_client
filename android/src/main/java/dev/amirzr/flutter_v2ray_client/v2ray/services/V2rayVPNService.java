@@ -8,6 +8,7 @@ import android.net.VpnService;
 import android.os.Build;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
+import android.content.pm.PackageManager;
 
 import dev.amirzr.flutter_v2ray_client.v2ray.core.V2rayCoreManager;
 import dev.amirzr.flutter_v2ray_client.v2ray.interfaces.V2rayServicesListener;
@@ -188,6 +189,11 @@ public class V2rayVPNService extends VpnService implements V2rayServicesListener
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
             builder.setMetered(false);
         }
+            // add this part then your app wont go to vpn tunnel  
+        try {
+            builder.addDisallowedApplication(getPackageName());
+            } catch (PackageManager.NameNotFoundException ignored) {}
+            // now remove the protect parts in coremanager and use pure libv2ray.aar you can download it from "https://github.com/2dust/AndroidLibXrayLite/releases"
 
         try {
             mInterface = builder.establish();
