@@ -1,3 +1,4 @@
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_v2ray_client/flutter_v2ray.dart';
 
@@ -39,48 +40,67 @@ void main() {
   });
 
   group('V2ray Configuration Validation Tests', () {
+    const channel = MethodChannel('flutter_v2ray_client');
+    final messenger =
+        TestDefaultBinaryMessengerBinding.instance.defaultBinaryMessenger;
     late V2ray v2ray;
+    late List<MethodCall> calls;
 
     setUp(() {
       v2ray = V2ray(onStatusChanged: (_) {});
+      calls = [];
+      messenger.setMockMethodCallHandler(channel, (call) async {
+        calls.add(call);
+        return call.method == 'getServerDelay' ? 42 : null;
+      });
     });
 
-    test('should validate valid JSON config', () {
+    tearDown(() {
+      messenger.setMockMethodCallHandler(channel, null);
+    });
+
+    test('forwards a valid configuration to the Android start channel',
+        () async {
       const validConfig = '{"inbounds": [], "outbounds": []}';
 
-      expect(
-          () => v2ray.startV2Ray(
-                remark: 'Test',
-                config: validConfig,
-                proxyOnly: true,
-              ),
-          returnsNormally);
+      await v2ray.startV2Ray(
+        remark: 'Test',
+        config: validConfig,
+        proxyOnly: true,
+      );
+
+      expect(calls.single.method, 'startV2Ray');
+      expect(calls.single.arguments['config'], validConfig);
     });
 
-    test('should throw ArgumentError for invalid JSON config', () {
-      const invalidConfig = 'invalid json';
+    test('rejects invalid JSON before starting Android', () async {
+      await expectLater(
+        v2ray.startV2Ray(
+          remark: 'Test',
+          config: 'invalid json',
+          proxyOnly: true,
+        ),
+        throwsArgumentError,
+      );
 
-      expect(
-          () => v2ray.startV2Ray(
-                remark: 'Test',
-                config: invalidConfig,
-                proxyOnly: true,
-              ),
-          throwsArgumentError);
+      expect(calls, isEmpty);
     });
 
-    test('should validate server delay with valid JSON config', () {
+    test('returns the delay from the Android channel', () async {
       const validConfig = '{"inbounds": [], "outbounds": []}';
 
-      expect(() => v2ray.getServerDelay(config: validConfig), returnsNormally);
+      expect(await v2ray.getServerDelay(config: validConfig), 42);
+      expect(calls.single.method, 'getServerDelay');
+      expect(calls.single.arguments['config'], validConfig);
     });
 
-    test('should throw ArgumentError for server delay with invalid JSON config',
-        () {
-      const invalidConfig = 'invalid json';
+    test('rejects invalid JSON before measuring Android delay', () async {
+      await expectLater(
+        v2ray.getServerDelay(config: 'invalid json'),
+        throwsArgumentError,
+      );
 
-      expect(() => v2ray.getServerDelay(config: invalidConfig),
-          throwsArgumentError);
+      expect(calls, isEmpty);
     });
   });
 }

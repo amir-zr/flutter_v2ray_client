@@ -7,11 +7,17 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Changed
+- **Android core**: embed Xray 26.11.9 with the existing Flutter API,
+  traffic counters, BadVPN bridge, and Android API 21 minimum.
+
 ### Fixed
 - **Android VPN startup**: wait up to five seconds with capped backoff for the
   tun2socks control socket before handing off the VPN file descriptor. Failed
   handoff now closes retry sockets and stops the VPN instead of leaving a
   connected-looking tunnel without traffic.
+- **Android VPN lifecycle**: publish the connected state after TUN descriptor
+  handoff. The core manager owns service shutdown after the native loop stops.
 
 ## [3.4.0]
 

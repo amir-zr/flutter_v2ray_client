@@ -136,7 +136,7 @@ public final class V2rayCoreManager {
                     if (v2rayServicesListener != null) {
                         return v2rayServicesListener.onProtect((int) fd);
                     }
-                    return true;
+                    return false;
                 }
             });
             // Initialize controller with callback handler
@@ -150,18 +150,8 @@ public final class V2rayCoreManager {
 
                 @Override
                 public long shutdown() {
-                    if (v2rayServicesListener == null) {
-                        Log.e(V2rayCoreManager.class.getSimpleName(), "shutdown failed => can`t find initial service.");
-                        return -1;
-                    }
-                    try {
-                        v2rayServicesListener.stopService();
-                        v2rayServicesListener = null;
-                        return 0;
-                    } catch (Exception e) {
-                        Log.e(V2rayCoreManager.class.getSimpleName(), "shutdown failed =>", e);
-                        return -1;
-                    }
+                    // stopCore owns service cleanup after the native stop completes.
+                    return 0;
                 }
 
                 @Override
@@ -214,27 +204,21 @@ public final class V2rayCoreManager {
                 Log.e(V2rayCoreManager.class.getSimpleName(), "startCore failed => coreController is null.");
                 return false;
             }
-            // Configure protector target server and IP family preference before starting
-            // core
-            try {
-                String server = v2rayConfig.CONNECTED_V2RAY_SERVER_ADDRESS + ":"
-                        + v2rayConfig.CONNECTED_V2RAY_SERVER_PORT;
-                Libv2ray.setProtectorServer(server, false);
-            } catch (Exception ignored) {
-            }
             coreController.startLoop(v2rayConfig.V2RAY_FULL_JSON_CONFIG, 0);
-            V2RAY_STATE = AppConfigs.V2RAY_STATES.V2RAY_CONNECTED;
-            if (isV2rayCoreRunning()) {
-                // Refresh the already-started foreground notification with the
-                // connected state. Foreground promotion itself is done by the
-                // service before starting the core.
-                showNotification(v2rayConfig);
-            }
         } catch (Exception e) {
             Log.e(V2rayCoreManager.class.getSimpleName(), "startCore failed =>", e);
             return false;
         }
         return true;
+    }
+
+    public void markConnected(V2rayServicesListener listener, V2rayConfig config) {
+        if (v2rayServicesListener != listener
+                || V2RAY_STATE != AppConfigs.V2RAY_STATES.V2RAY_CONNECTING) {
+            return;
+        }
+        V2RAY_STATE = AppConfigs.V2RAY_STATES.V2RAY_CONNECTED;
+        showNotification(config);
     }
 
     public void stopCore() {
@@ -256,7 +240,9 @@ public final class V2rayCoreManager {
                 if (coreController != null) {
                     coreController.stopLoop();
                 }
-                v2rayServicesListener.stopService();
+                if (v2rayServicesListener != null) {
+                    v2rayServicesListener.stopService();
+                }
                 Log.e(V2rayCoreManager.class.getSimpleName(), "stopCore success => v2ray core stopped.");
             } else {
                 Log.e(V2rayCoreManager.class.getSimpleName(), "stopCore failed => v2ray core not running.");

@@ -6,6 +6,8 @@ import android.net.LocalSocket;
 import android.net.LocalSocketAddress;
 import android.net.VpnService;
 import android.os.Build;
+import android.os.Handler;
+import android.os.Looper;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
 
@@ -26,6 +28,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 
 public class V2rayVPNService extends VpnService implements V2rayServicesListener {
+    private final Handler mainHandler = new Handler(Looper.getMainLooper());
     private ParcelFileDescriptor mInterface;
     private Process process;
     private V2rayConfig v2rayConfig;
@@ -256,7 +259,8 @@ public class V2rayVPNService extends VpnService implements V2rayServicesListener
 
     private void sendFileDescriptor() {
         String localSocksFile = new File(getApplicationContext().getFilesDir(), "sock_path").getAbsolutePath();
-        FileDescriptor tunFd = mInterface.getFileDescriptor();
+        ParcelFileDescriptor tunnel = mInterface;
+        FileDescriptor tunFd = tunnel.getFileDescriptor();
         new Thread(() -> {
             long startedAtNanos = System.nanoTime();
             int failedAttempts = 0;
@@ -296,6 +300,11 @@ public class V2rayVPNService extends VpnService implements V2rayServicesListener
                     OutputStream clientOutStream = clientLocalSocket.getOutputStream();
                     clientLocalSocket.setFileDescriptorsForSend(new FileDescriptor[] { tunFd });
                     clientOutStream.write(32);
+                    mainHandler.post(() -> {
+                        if (isRunning && mInterface == tunnel) {
+                            V2rayCoreManager.getInstance().markConnected(this, v2rayConfig);
+                        }
+                    });
                     Log.i(
                             "SOCK_FILE",
                             "Sent VPN file descriptor after " + failedAttempts + " failed attempt(s)");

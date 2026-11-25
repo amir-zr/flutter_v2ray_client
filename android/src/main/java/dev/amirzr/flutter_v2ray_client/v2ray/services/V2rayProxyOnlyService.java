@@ -68,6 +68,7 @@ public class V2rayProxyOnlyService extends Service implements V2rayServicesListe
                 return START_NOT_STICKY;
             }
             if (V2rayCoreManager.getInstance().startCore(v2rayConfig)) {
+                V2rayCoreManager.getInstance().markConnected(this, v2rayConfig);
                 Log.i("V2rayProxyOnlyService", "onStartCommand success => v2ray core started.");
             } else {
                 Log.e("V2rayProxyOnlyService", "Failed to start v2ray core");

@@ -62,6 +62,22 @@ For Android-specific changes:
 2. Build the AAR: `./gradlew assembleDebug`
 3. Test with the example app
 
+### Rebuild the embedded Android Xray core
+
+Use JDK 21 and set `ANDROID_SDK_ROOT` to an Android SDK with NDK
+`29.0.14206865`. The build pins the AndroidLibXrayLite sources, Go, and
+gomobile, then applies the Android socket protection and traffic counter
+bindings from `tool/android_xray/`.
+
+```sh
+./tool/build_android_xray.sh /path/to/libv2ray.aar
+```
+
+Validate the generated Java bindings, Android API 21 manifest, and 16 KiB
+ELF load alignment for each ABI before replacing `android/libs/libv2ray.aar`.
+Exercise connect, traffic, disconnect, and reconnect on physical Android
+through the consuming app before updating its Git dependency.
+
 ## 💡 How to Contribute
 
 ### Types of Contributions
